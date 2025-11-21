@@ -1,20 +1,39 @@
 import React, { useState } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, AlertCircle } from 'lucide-react';
+import { supabase } from '../services/supabaseClient';
 
 export const EarlyAccess: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     
     setStatus('submitting');
-    // Simulate API call
-    setTimeout(() => {
+    setErrorMessage('');
+
+    try {
+      // Connecting to the specific 'Emails' table you created
+      const { error } = await supabase
+        .from('Emails')
+        .insert([{ email: email }]);
+
+      if (error) throw error;
+
       setStatus('success');
       setEmail('');
-    }, 1500);
+    } catch (err: any) {
+      console.error('Error submitting email:', err);
+      setStatus('error');
+      setErrorMessage('Something went wrong. Try again later.');
+      
+      // Optional: Reset error state after a few seconds
+      setTimeout(() => {
+        setStatus('idle');
+      }, 3000);
+    }
   };
 
   return (
@@ -35,7 +54,7 @@ export const EarlyAccess: React.FC = () => {
             </p>
 
             {status === 'success' ? (
-                <div className="bg-offblack text-white p-8 rounded-2xl inline-flex flex-col items-center animate-fade-in">
+                <div className="bg-offblack text-white p-8 rounded-2xl inline-flex flex-col items-center animate-fade-in shadow-2xl">
                     <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-4">
                         <Check size={24} />
                     </div>
@@ -44,18 +63,25 @@ export const EarlyAccess: React.FC = () => {
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 max-w-lg mx-auto">
-                    <input 
-                        type="email" 
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="enter your email" 
-                        className="flex-1 px-6 py-4 rounded-xl bg-offblack/10 border-2 border-offblack/20 text-offblack placeholder:text-offblack/50 focus:outline-none focus:border-offblack focus:bg-offblack/5 transition-all font-bold"
-                    />
+                    <div className="flex-1 flex flex-col relative">
+                        <input 
+                            type="email" 
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="enter your email" 
+                            className="w-full px-6 py-4 rounded-xl bg-offblack/10 border-2 border-offblack/20 text-offblack placeholder:text-offblack/50 focus:outline-none focus:border-offblack focus:bg-offblack/5 transition-all font-bold"
+                        />
+                        {status === 'error' && (
+                            <div className="absolute -bottom-8 left-0 text-red-600 text-xs font-bold flex items-center gap-1">
+                                <AlertCircle size={12} /> {errorMessage}
+                            </div>
+                        )}
+                    </div>
                     <button 
                         type="submit"
                         disabled={status === 'submitting'}
-                        className="bg-offblack text-white px-8 py-4 rounded-xl font-black uppercase tracking-wide hover:bg-white hover:text-offblack transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                        className="bg-offblack text-white px-8 py-4 rounded-xl font-black uppercase tracking-wide hover:bg-white hover:text-offblack transition-all flex items-center justify-center gap-2 disabled:opacity-70 h-[60px]"
                     >
                         {status === 'submitting' ? 'Joining...' : 'Get Access'}
                         {!status.startsWith('submitting') && <ArrowRight size={20} />}
@@ -63,7 +89,7 @@ export const EarlyAccess: React.FC = () => {
                 </form>
             )}
 
-            <p className="mt-6 text-xs font-bold uppercase tracking-widest opacity-60">
+            <p className="mt-8 text-xs font-bold uppercase tracking-widest opacity-60">
                 Limited spots available for Beta
             </p>
        </div>

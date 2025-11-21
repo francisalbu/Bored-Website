@@ -45,7 +45,7 @@ export const Hero: React.FC = () => {
         </h1>
 
         <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto font-medium mb-10">
-          TikTok discovery meets real experiences.
+          Boredom Is a Choice. We Are The Cure.
         </p>
 
         <div className="flex flex-col md:flex-row items-center gap-4">

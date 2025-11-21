@@ -28,10 +28,10 @@ export const EarlyAccess: React.FC = () => {
 
        <div className="max-w-5xl mx-auto px-6 relative z-10 text-center">
             <h2 className="text-5xl md:text-7xl font-black uppercase mb-6 tracking-tighter">
-                Don't miss the <br/> launch party.
+                Don't miss it.
             </h2>
             <p className="text-xl md:text-2xl font-medium mb-10 max-w-2xl mx-auto">
-                We are launching in Lisbon this summer. Get early access, beta features, and a free drink on us when you book your first experience.
+                We are launching in Lisbon early next year. Get early access, beta features, and a free drink on us when you book your first experience.
             </p>
 
             {status === 'success' ? (

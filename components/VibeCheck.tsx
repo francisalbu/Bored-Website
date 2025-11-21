@@ -21,10 +21,10 @@ export const VibeCheck: React.FC = () => {
     <section id="vibe-check" className="py-24 bg-offblack relative border-y border-gray-800">
       <div className="max-w-4xl mx-auto px-6 text-center">
         <div className="inline-block bg-neon text-black px-4 py-1 rounded-full font-black text-xs uppercase tracking-widest mb-6">
-            Powered by Gemini AI
+            Powered by BORED AI
         </div>
         <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter uppercase">
-          Vibe Check Lisbon
+          Your Moment of Madness
         </h2>
         <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
           Don't know what to do? Tell our sassy AI how you're feeling, and get a non-boring recommendation instantly.
